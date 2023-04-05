@@ -179,7 +179,7 @@ export default function Home() {
                   id="Please Enter Audio Url"
                   value={newQuestion}
                   onChange={(e) => setNewQuestion(e.target.value)}
-                  label="Please enter any auther name"
+                  label="Apply Tone"
                   type="text"
                   sx={{ width: "400px" }}
                   color="warning"
