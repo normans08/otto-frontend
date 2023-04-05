@@ -8,6 +8,9 @@ import ai from "../assets/ai.png";
 import Image from "next/image";
 import { Configuration, OpenAIApi } from "openai";
 import axios from "axios";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import Loader from "../components/Loader";
 
 export default function Home() {
   const [file, setFile] = useState("");
@@ -15,7 +18,8 @@ export default function Home() {
   const [lines, setLines] = useState<any[]>([]);
   const [newQuestion, setNewQuestion] = useState("");
   const [storedValues, setStoredValues] = useState<any>([]);
-
+  const [gramLoader, setGramLoader] = useState(false);
+  const [gptLoader, setGptLoader] = useState(false);
   let formatedText = lines.join("^").toString();
 
   const configuration = new Configuration({
@@ -28,6 +32,7 @@ export default function Home() {
     setLines(transcription.split("."));
   }, [transcription]);
   const transcribe = async () => {
+    setGramLoader(true);
     try {
       const response = await fetch("/api/transcribe", {
         method: "POST",
@@ -40,11 +45,15 @@ export default function Home() {
       const transcription =
         data.results.channels[0].alternatives[0].paragraphs.transcript;
       setTranscription(transcription);
+      setGramLoader(false);
     } catch (error) {
+      setGramLoader(false);
+
       console.error(error);
     }
   };
   const generateResponse = async () => {
+    setGptLoader(true);
     let options = {
       model: "gpt-3.5-turbo",
       temperature: 0,
@@ -80,12 +89,16 @@ export default function Home() {
     );
     console.log("response", response);
     if (response.data) {
+      setGptLoader(false);
+
       setStoredValues([
         {
           question: newQuestion,
           answer: response.data.content,
         },
       ]);
+      setGptLoader(false);
+
       setNewQuestion("");
     }
   };
@@ -155,27 +168,39 @@ export default function Home() {
           </Box>
           <Box sx={{ display: "flex" }}>
             <Box sx={{ p: 3, mb: 3, overflow: "auto", height: "90vh" }}>
-              {lines.map((line, index) => {
-                if (line.startsWith("Speaker 0:")) {
-                  return <p key={index}>{line}</p>;
-                } else {
-                  return <p key={index}>{line}</p>;
-                }
-              })}
+              {gramLoader ? (
+                <Loader />
+              ) : (
+                <>
+                  {lines.map((line, index) => {
+                    if (line.startsWith("Speaker 0:")) {
+                      return <p key={index}>{line}</p>;
+                    } else {
+                      return <p key={index}>{line}</p>;
+                    }
+                  })}
+                </>
+              )}
             </Box>
 
             <Box sx={{ p: 3, overflow: "auto", height: "50vh" }}>
-              {storedValues.map((value: any, index: any) => {
-                return (
-                  <div className="answer-section" key={index}>
-                    {/* <p className="question">{value.question}</p> */}
-                    <p className="answer">{value.answer}</p>
-                    <div className="copy-icon">
-                      <i className="fa-solid fa-copy"></i>
-                    </div>
-                  </div>
-                );
-              })}
+              {gptLoader ? (
+                <Loader />
+              ) : (
+                <>
+                  {storedValues.map((value: any, index: any) => {
+                    return (
+                      <div className="answer-section" key={index}>
+                        {/* <p className="question">{value.question}</p> */}
+                        <p className="answer">{value.answer}</p>
+                        <div className="copy-icon">
+                          <i className="fa-solid fa-copy"></i>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
             </Box>
           </Box>
         </Card>
