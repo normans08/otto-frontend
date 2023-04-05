@@ -110,7 +110,7 @@ export default function Home() {
             <TextField
               id="Please Enter your Audio Url"
               onChange={(e) => setFile(e.target.value)}
-              label="Please Enter Audio Url"
+              label="Please Enter Voice Note Url"
               type="text"
               color="warning"
               sx={{ width: "400px" }}
@@ -176,7 +176,7 @@ export default function Home() {
             {lines.length > 1 && (
               <>
                 <TextField
-                  id="Please Enter Voice Note Url"
+                  id="Please Enter Voice s Note Url"
                   value={newQuestion}
                   onChange={(e) => setNewQuestion(e.target.value)}
                   label="Apply Tone"
