@@ -176,7 +176,7 @@ export default function Home() {
             {lines.length > 1 && (
               <>
                 <TextField
-                  id="Please Enter Audio Url"
+                  id="Please Enter Voice Note Url"
                   value={newQuestion}
                   onChange={(e) => setNewQuestion(e.target.value)}
                   label="Apply Tone"
