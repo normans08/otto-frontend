@@ -5,3 +5,6 @@ body{
   margin:0;
   background-color: #f0f0f0;
 }
+.css-1vtpnhp-MuiButtonBase-root-MuiIconButton-root:hover{
+  background: none !important;
+}
