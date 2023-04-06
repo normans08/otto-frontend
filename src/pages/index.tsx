@@ -11,7 +11,7 @@ import axios from "axios";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Loader from "../components/Loader";
-
+import VoiceRecoder from "../components/AudioRecorder";
 export default function Home() {
   const [file, setFile] = useState("");
   const [transcription, setTranscription] = useState<any>("");
@@ -25,7 +25,7 @@ export default function Home() {
   useEffect(() => {
     setLines(transcription.split("."));
   }, [transcription]);
-  const transcribe = async () => {
+  const transcribe = async (file: any) => {
     setGramLoader(true);
     try {
       const response = await fetch("/api/transcribe", {
@@ -105,7 +105,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <form>
+        <VoiceRecoder transcribeFuc={transcribe} />
+        {/* <form>
           <Box sx={{ p: 10, textAlign: "center" }}>
             <TextField
               id="Please Enter your Audio Url"
@@ -129,7 +130,7 @@ export default function Home() {
               Transcribe
             </Button>
           </Box>
-        </form>
+        </form> */}
 
         <Card sx={{ pb: 3, m: 3 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", p: 3 }}>
