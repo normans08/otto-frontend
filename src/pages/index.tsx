@@ -6,7 +6,6 @@ import axios from "axios";
 import Loader from "../components/Loader";
 import VoiceRecoder from "../components/AudioRecorder";
 export default function Home() {
-  const [file, setFile] = useState("");
   const [transcription, setTranscription] = useState<any>("");
   const [lines, setLines] = useState<any[]>([]);
   const [newQuestion, setNewQuestion] = useState("");
@@ -21,19 +20,22 @@ export default function Home() {
   const transcribe = async (file: any) => {
     setGramLoader(true);
     try {
-      const response = await fetch("/api/transcribe", {
-        method: "POST",
-        body: JSON.stringify({
+      const response: any = await axios.post(
+        "https://dark-plum-caterpillar-ring.cyclic.app/transcribe",
+        {
           url: file,
-        }),
-      });
-      const received = await response.json();
-      const data = JSON.parse(received);
+        }
+      );
 
-      const transcription =
-        data.results.channels[0].alternatives[0].paragraphs.transcript;
-      setTranscription(transcription);
-      setGramLoader(false);
+      if (response.status === 200) {
+        let transcription = response?.data?.transcription?.transcript;
+        setTranscription(transcription);
+        setGramLoader(false);
+      } else {
+        setTranscription("");
+
+        setGramLoader(false);
+      }
     } catch (error) {
       setGramLoader(false);
       setTranscription("");
